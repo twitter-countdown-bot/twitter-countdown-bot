@@ -1,8 +1,11 @@
 name: Post Daily Countdown Tweet
 
 on:
+
+  workflow_dispatch:    # enables manual trigger button
   schedule:
-    - cron: '30 18 * * *'  # Runs daily at 6:30 PM UTC (12:00 AM IST)
+    - cron: '30 18 * * *'   # keeps the automatic daily schedule at 12:00 AM IST
+
 
 jobs:
   tweet:
