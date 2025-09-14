@@ -10,12 +10,14 @@ def days_left(release_iso: str) -> int:
 def message(n: int) -> str:
     """Generates a tweet message based on the number of days left."""
     if n > 1:
-        return f"TheyCallHimOG releases in {n} days! #OG #TheyCallHimOG #PawanKalyan #Countdown"
+        return f"#TheyCallHimOG releases in {n} days!\n#PawanKalyan"
     if n == 1:
-        return "TheyCallHimOG releases in 1 day! #OG #TheyCallHimOG #PawanKalyan #Countdown"
+        return "#TheyCallHimOG releases in 1 day!\n#PawanKalyan"
     if n == 0:
-        return "TheyCallHimOG releases today! 🎬🔥 #OG #TheyCallHimOG #PawanKalyan"
-    return "TheyCallHimOG has released! Hope you enjoyed it! #OG #TheyCallHimOG #PawanKalyan"
+        # Applying the new format for release day as well
+        return "#TheyCallHimOG releases today! 🎬🔥\n#PawanKalyan"
+    # Applying the new format for after the release
+    return "#TheyCallHimOG has released! Hope you enjoyed it!\n#PawanKalyan"
 
 def main():
     try:
@@ -24,10 +26,9 @@ def main():
         api_secret = os.environ["API_SECRET"]
         access_token = os.environ["ACCESS_TOKEN"]
         access_secret = os.environ["ACCESS_SECRET"]
-        release_date = os.environ.get("RELEASE_DATE", "2025-09-27") # Adjusted release date
+        release_date = os.environ.get("RELEASE_DATE", "2025-09-27")
         
         # --- V2 AUTHENTICATION ---
-        # Authenticate using tweepy.Client for the v2 API
         client = tweepy.Client(
             consumer_key=api_key,
             consumer_secret=api_secret,
@@ -39,8 +40,7 @@ def main():
         text = message(days_left(release_date))
         
         # --- V2 TWEET POSTING ---
-        # Post the tweet using client.create_tweet()
-        print(f"Attempting to post tweet: '{text}'")
+        print(f"Attempting to post tweet:\n---\n{text}\n---")
         response = client.create_tweet(text=text)
         
         print(f"🎉 Tweet posted successfully! Tweet ID: {response.data['id']}")
