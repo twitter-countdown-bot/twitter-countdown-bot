@@ -1,6 +1,6 @@
 import os
 import time
-from datetime import date
+from datetime import datetime
 import tweepy
 
 # --- Your list of movies to track ---
@@ -27,9 +27,15 @@ MOVIES = [
 ]
 
 def days_left(release_iso: str) -> int:
-    """Calculates the number of days until the release date."""
-    release = date.fromisoformat(release_iso)
-    return (release - date.today()).days
+    """Calculates the number of days until the release date in IST."""
+    # Define the Indian Standard Time zone
+    ist_zone = pytz.timezone("Asia/Kolkata")
+    
+    # Get the current date in that time zone
+    today_ist = datetime.now(ist_zone).date()
+    
+    release = datetime.fromisoformat(release_iso).date()
+    return (release - today_ist).days
 
 def generate_message(n: int, movie: dict) -> str:
     """Generates a generic tweet message for any movie."""
