@@ -9,7 +9,7 @@ MOVIES = [
         "title": "TheyCallHimOG",
         "main_hashtag": "#TheyCallHimOG",
         "secondary_hashtag": "#PawanKalyan",
-        "release_date": "2025-09-27"
+        "release_date": "2025-09-25"
     },
     {
         "title": "Kantara: Chapter 1",
@@ -22,7 +22,7 @@ MOVIES = [
         "title": "Baahubali The Epic",
         "main_hashtag": "#BaahubaliTheEpic",
         "secondary_hashtag": "#Prabhas #SSRajamouli",
-        "release_date": "2027-12-17"  # NOTE: This is a placeholder date!
+        "release_date": "2025-10-31"  # NOTE: This is a placeholder date!
     },
 ]
 
