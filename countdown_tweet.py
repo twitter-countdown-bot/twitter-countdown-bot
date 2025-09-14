@@ -3,10 +3,10 @@ import os
 from datetime import datetime
 
 # Authenticate to Twitter with environment variables (from GitHub secrets)
-api_key = os.environ['API_KEY']
-api_secret = os.environ['API_SECRET_KEY']
-access_token = os.environ['ACCESS_TOKEN']
-access_secret = os.environ['ACCESS_TOKEN_SECRET']
+api_key = os.environ['uisJbiEayKR4Nk4xKMyxuqFyt']
+api_secret = os.environ['fnfDP6h6uDSNWuOixNJVMDdTStAJ1ECRKGp93Su0tv9TKQFtpY']
+access_token = os.environ['1966946864697405445-GFjRo10Xb9qhX24Sh7bgGIlkxDjJwG']
+access_secret = os.environ['zoLvZiPxPMIZFBJyZGvEZDUx9REcUYNQx0GnJg2yqmSYb']
 
 auth = tweepy.OAuth1UserHandler(api_key, api_secret, access_token, access_secret)
 api = tweepy.API(auth)
