@@ -18,6 +18,13 @@ MOVIES = [
         "secondary_hashtag": "#RishabShetty",
         "release_date": "2025-10-02"
     },
+    {
+        "title": "Baahubali The Epic",
+        "main_hashtag": "#BaahubaliTheEpic",
+        "secondary_hashtag": "#Prabhas #SSRajamouli #Anushka #RanaDaggubati #Tamannaah",
+        "release_date": "2025-10-31" 
+    },
+    
     # --- Add your next movie here ---
     # {
     #     "title": "Your Next Movie",
