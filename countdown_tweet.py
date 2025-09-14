@@ -2,6 +2,7 @@ import os
 import time
 from datetime import datetime
 import tweepy
+import pytz 
 
 # --- Your list of movies to track ---
 MOVIES = [
