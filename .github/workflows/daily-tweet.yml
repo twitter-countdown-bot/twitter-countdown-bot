@@ -2,7 +2,7 @@ name: Post Daily Countdown Tweet
 
 on:
   schedule:
-    - cron: '51 16 * * *' # 10:21 PM IST daily (16:51 UTC)
+    - cron: '53 16 * * *' # 10:23 PM IST daily (16:53 UTC)
   workflow_dispatch:
 
 jobs:
