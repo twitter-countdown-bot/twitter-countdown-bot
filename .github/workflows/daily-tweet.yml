@@ -2,32 +2,33 @@ name: Post Daily Countdown Tweet
 
 on:
   schedule:
-    - cron: '35 19 * * *' # 1:05 AM IST daily (19:35 UTC)
+    - cron: '51 16 * * *' # 10:21 PM IST daily (16:51 UTC)
   workflow_dispatch:
 
 jobs:
   tweet:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install tweepy pytz
 
-      - name: Run script
+      - name: Run countdown script
         env:
           API_KEY: ${{ secrets.API_KEY }}
           API_SECRET: ${{ secrets.API_SECRET }}
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
-          RELEASE_DATE: '2025-09-25'
-        run: python countdown_tweet.py
+          RELEASE_DATE: '2025-09-25'   # Set your actual release date here
+        run: |
+          echo "Starting countdown tweet..."
+          python countdown_tweet.py
