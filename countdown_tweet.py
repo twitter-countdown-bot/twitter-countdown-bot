@@ -25,6 +25,12 @@ MOVIES = [
         "secondary_hashtag": "#Prabhas #SSRajamouli",
         "release_date": "2025-10-31"  # NOTE: This is a placeholder date!
     },
+     {
+        "title": "PEDDI",
+        "main_hashtag": "#PEDDI",
+        "secondary_hashtag": "#RamCharan #BuchiBabu",
+        "release_date": "2026-03-27"  # NOTE: This is a placeholder date!
+    },
 ]
 
 def days_left(release_iso: str) -> int:
