@@ -2,45 +2,46 @@ import os
 import time
 from datetime import datetime
 import tweepy
-import pytz 
+import pytz
+import requests
+import io
 
-# --- Your list of movies to track ---
+# --- Add your movie list with image URLs here ---
 MOVIES = [
     {
         "title": "TheyCallHimOG",
         "main_hashtag": "#TheyCallHimOG",
         "secondary_hashtag": "#PawanKalyan",
-        "release_date": "2025-09-25"
+        "release_date": "2025-09-25",
+        "image_url": "https://pbs.twimg.com/media/G05bgvQakAAyh6m?format=jpg&name=large" # <-- Example URL
     },
     {
         "title": "Kantara: Chapter 1",
         "main_hashtag": "#KantaraChapter1",
         "secondary_hashtag": "#RishabShetty",
-        "release_date": "2025-10-02"
+        "release_date": "2025-10-02",
+        "image_url": "https://pbs.twimg.com/media/G0yd4TZawAAKiUx?format=jpg&name=medium" # <-- Example URL
     },
-    # --- Your new movie ---
     {
         "title": "Baahubali The Epic",
         "main_hashtag": "#BaahubaliTheEpic",
         "secondary_hashtag": "#Prabhas #SSRajamouli",
-        "release_date": "2025-10-31"  # NOTE: This is a placeholder date!
+        "release_date": "2025-10-31",
+        "image_url": "https://pbs.twimg.com/media/Gzv5bwDbYAA8FXr?format=jpg&name=large" # <-- Example URL
     },
-     {
+    {
         "title": "PEDDI",
         "main_hashtag": "#PEDDI",
         "secondary_hashtag": "#RamCharan #BuchiBabu",
-        "release_date": "2026-03-27"  # NOTE: This is a placeholder date!
+        "release_date": "2026-03-27",
+        "image_url": "https://pbs.twimg.com/media/GnBJpAIaYAE1J4_?format=jpg&name=large" # <-- Example URL
     },
 ]
 
 def days_left(release_iso: str) -> int:
     """Calculates the number of days until the release date in IST."""
-    # Define the Indian Standard Time zone
     ist_zone = pytz.timezone("Asia/Kolkata")
-    
-    # Get the current date in that time zone
     today_ist = datetime.now(ist_zone).date()
-    
     release = datetime.fromisoformat(release_iso).date()
     return (release - today_ist).days
 
@@ -60,54 +61,66 @@ def generate_message(n: int, movie: dict) -> str:
 
 def main():
     try:
-        # Get credentials from environment variables
+        # --- Authentication ---
         api_key = os.environ["API_KEY"]
         api_secret = os.environ["API_SECRET"]
         access_token = os.environ["ACCESS_TOKEN"]
         access_secret = os.environ["ACCESS_SECRET"]
         
-        # Authenticate with the v2 Client
+        # We need both the v2 Client (for tweeting) and v1.1 API (for media uploads)
         client = tweepy.Client(
-            consumer_key=api_key,
-            consumer_secret=api_secret,
-            access_token=access_token,
-            access_token_secret=access_secret
+            consumer_key=api_key, consumer_secret=api_secret,
+            access_token=access_token, access_token_secret=access_secret
         )
+        auth = tweepy.OAuth1UserHandler(api_key, api_secret, access_token, access_secret)
+        api = tweepy.API(auth)
         
         print("Starting daily movie countdown tweets...")
         
-        # Loop through each movie in the list
         for movie in MOVIES:
             title = movie["title"]
-            release_date = movie["release_date"]
             print(f"\nProcessing: {title}")
 
-            days = days_left(release_date)
+            days = days_left(movie["release_date"])
 
             if days < -7:
                 print(f"'{title}' was released more than a week ago. Skipping.")
                 continue
 
-            # Generate the specific message for this movie
+            # --- Media Upload Logic ---
+            media_ids = []
+            if movie.get("image_url"):
+                try:
+                    # Download the image from the URL
+                    response = requests.get(movie["image_url"])
+                    response.raise_for_status()
+                    
+                    # Upload the image from memory to Twitter
+                    image_file = io.BytesIO(response.content)
+                    media = api.media_upload(filename=f"{title}.jpg", file=image_file)
+                    media_ids.append(media.media_id)
+                    print(f"Image for {title} uploaded successfully.")
+                except Exception as e:
+                    print(f"❌ Could not upload image for {title}: {e}")
+
+            # --- Generate message and Post Tweet ---
             text = generate_message(days, movie)
             
-            # Post the tweet
             try:
                 print(f"Attempting to post tweet:\n---\n{text}\n---")
-                response = client.create_tweet(text=text)
+                # Attach the media_ids list to the tweet
+                response = client.create_tweet(text=text, media_ids=media_ids)
                 print(f"🎉 Tweet posted successfully for {title}! Tweet ID: {response.data['id']}")
             except Exception as e:
                 print(f"❌ Error posting tweet for {title}: {e}")
 
-            # Wait for a few seconds between tweets
+            # Wait between tweets to avoid rate limits
             if movie != MOVIES[-1]:
-                 print("Waiting for 15 seconds before the next tweet...")
-                 time.sleep(15)
+                print("Waiting for 15 seconds before the next tweet...")
+                time.sleep(15)
 
         print("\n✅ All movie tweets processed for today.")
 
-    except KeyError as e:
-        print(f"❌ Error: Missing environment variable {e}. Please set all required credentials.")
     except Exception as e:
         print(f"❌ An error occurred: {e}")
 
